@@ -31,7 +31,7 @@ module Enumerable
     end
   end
 
-  def my_select
+  def my_select(&block)
     if self.respond_to?(:keys) && block_given?
       result = Hash.new
       for i in 0..self.keys.length - 1
@@ -99,11 +99,41 @@ module Enumerable
     return !result
   end
 
-  def my_count
-    if self.respond_to?(:keys)
-      self.keys.length
+  def my_count(arg = nil, &block)
+    if block_given?
+      if self.respond_to?(:keys) && block_given?
+        result = Hash.new
+        for i in 0..self.keys.length - 1
+          if yield(self.keys[i], self[self.keys[i]]) then result[self.keys[i]] = self[self.keys[i]] end
+        end
+      elsif block_given?
+        result = Array.new
+        for i in 0..self.count - 1
+          if yield(self[i]) then result.push(self[i]) end
+        end
+      end
+      return result.my_count
     else
-      self.count
+      result = 0
+      if self.respond_to?(:keys)
+        while (self[self.keys[result]] != nil)
+          result += 1
+        end
+      else
+        if arg == nil
+          while (self[result] != nil)
+            result += 1
+          end
+        else
+          resultt = 0
+          while (self[result] != nil)
+            resultt += 1 if self[result] == arg
+            result += 1
+          end
+          return resultt
+        end
+      end
+      result
     end
   end
 
@@ -196,6 +226,14 @@ p testarray.my_none? { |value| value > 1 }
 print "\n"
 p testarray.count
 p testarray.my_count
+
+print "\n"
+p testarray.count { |v| v > 2 }
+p testarray.my_count { |v| v > 2 }
+
+print "\n"
+p testarray.count(3)
+p testarray.my_count(3)
 
 print "\n"
 p testarray.map { |n| n * n }
