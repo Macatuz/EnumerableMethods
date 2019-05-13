@@ -15,7 +15,6 @@ module Enumerable
     end
   end
 
-
   def my_each_with_index(&block)
     if self.respond_to?(:keys) && block_given?
       for i in 0..self.keys.length - 1
@@ -26,8 +25,6 @@ module Enumerable
         end
       end
     elsif block_given?
-
-
       for i in 0..self.count - 1
         yield(self[i], i)
       end
@@ -35,14 +32,12 @@ module Enumerable
   end
 
   def my_select
-
     if self.respond_to?(:keys) && block_given?
       result = Hash.new
       for i in 0..self.keys.length - 1
         if yield(self.keys[i], self[self.keys[i]]) then result[self.keys[i]] = self[self.keys[i]] end
       end
     elsif block_given?
-
       result = Array.new
       for i in 0..self.count - 1
         if yield(self[i]) then result.push(self[i]) end
@@ -50,7 +45,6 @@ module Enumerable
     end
     return result
   end
-
 
   def my_all?
     result = true
@@ -74,15 +68,12 @@ module Enumerable
     result = true
 
     if self.respond_to?(:keys) && block_given?
-
       result = Hash.new
       for i in 0..self.keys.length - 1
         result = false if !yield(i)
         break if !yield(i)
       end
-
     elsif block_given?
-
       result = Array.new
       for i in 0..self.count - 1
         result = false if !yield(i)
@@ -92,21 +83,17 @@ module Enumerable
     return result
   end
 
-
   def my_none?
     result = false
     if self.respond_to?(:keys) && block_given?
-
       for i in 0..self.keys.length - 1
         result = false if !yield(i)
         break if !yield(i)
       end
-
     elsif block_given?
       for i in 0..self.count - 1
         result = true if yield(self[i])
         break if yield(self[i])
-
       end
     end
     return !result
@@ -114,7 +101,6 @@ module Enumerable
 
   def my_count
     if self.respond_to?(:keys)
-
       self.keys.length
     else
       self.count
@@ -133,16 +119,13 @@ module Enumerable
         self[i] = yield(self[i])
       end
       self
-
     end
   end
 
   def my_inject
-
     if self.respond_to?(:keys) && block_given?
       raise "expected Array, got Hash"
     elsif block_given?
-
       result = self[0]
       for i in 1..self.count - 1
         result = yield(result, self[i])
@@ -152,20 +135,9 @@ module Enumerable
   end
 end
 
-
 def multiply_els(arr)
   arr.inject { |sum, n| sum * n }
 end
-
-
-class Array
-  include Enumerable
-end
-
-class Hash
-  include Enumerable
-end
-
 
 testhash = {
   "a" => 1,
@@ -238,4 +210,3 @@ p [2, 4, 5].inject { |sum, n| sum * n }
 p multiply_els([2, 4, 5])
 
 print "\nEND ARRAY TESTING\n"
-
